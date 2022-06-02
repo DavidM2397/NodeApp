@@ -9,7 +9,7 @@ async function main(){
     try{
         await client.connect();
 
-        await findOneListingByName(client, "White");
+        await updateListingByName(client, 1, { top_speed: 160});
 
     }
     catch(e){
@@ -55,4 +55,12 @@ async function findOneListingByName(client, nameOfListing) {
     } else {
         console.log(`No cars found with the color '${nameOfListing}'`);
     }
+}
+
+async function updateListingByName(client, nameOfListing, updatedListing) {
+    const result = await client.db("CarData").collection("Specifications")
+                        .updateOne({ car_id: nameOfListing }, { $set: updatedListing });
+
+    console.log(`${result.matchedCount} document(s) matched the query criteria.`);
+    console.log(`${result.modifiedCount} document(s) was/were updated.`);
 }
