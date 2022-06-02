@@ -9,6 +9,16 @@ async function main(){
     try{
         await client.connect();
 
+        await createMultipleListings(client, [
+            {
+                top_speed: 120,
+                drivetrain: "FWD",
+                engine: "V6",
+                transmission: "Automatic",
+                car_id: 0
+            }
+        ]);
+
 
     }
     catch(e){
@@ -35,4 +45,11 @@ async function listDatabases(client){
     databasesList.databases.forEach(db => {
         console.log('- ${db.name');
     })
+}
+
+async function createMultipleListings(client, newListings){
+    const result = await client.db("CarData").collection("Specifications").insertMany(newListings);
+
+    console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
+    console.log(result.insertedIds);       
 }
