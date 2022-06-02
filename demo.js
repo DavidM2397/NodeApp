@@ -9,7 +9,7 @@ async function main(){
     try{
         await client.connect();
 
-        await updateListingByName(client, 1, { top_speed: 160});
+        await deleteListingsScrapedBeforeDate(client, new Date("2021-02-15"));
 
     }
     catch(e){
@@ -63,4 +63,10 @@ async function updateListingByName(client, nameOfListing, updatedListing) {
 
     console.log(`${result.matchedCount} document(s) matched the query criteria.`);
     console.log(`${result.modifiedCount} document(s) was/were updated.`);
+}
+
+async function deleteListingsScrapedBeforeDate(client, date) {
+    const result = await client.db("CarData").collection("Specifications")
+        .deleteMany({ "last_scraped": { $lt: date } });
+    console.log(`${result.deletedCount} document(s) was/were deleted.`);
 }
