@@ -9,16 +9,7 @@ async function main(){
     try{
         await client.connect();
 
-        await createMultipleListings(client, [
-            {
-                top_speed: 120,
-                drivetrain: "FWD",
-                engine: "V6",
-                transmission: "Automatic",
-                car_id: 0
-            }
-        ]);
-
+        await findOneListingByName(client, "White");
 
     }
     catch(e){
@@ -52,4 +43,16 @@ async function createMultipleListings(client, newListings){
 
     console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
     console.log(result.insertedIds);       
+}
+
+
+async function findOneListingByName(client, nameOfListing) {
+    const result = await client.db("CarData").collection("Exterior").findOne({ color: nameOfListing });
+
+    if (result) {
+        console.log(`Found a car in the collection with the color '${nameOfListing}':`);
+        console.log(result);
+    } else {
+        console.log(`No cars found with the color '${nameOfListing}'`);
+    }
 }
